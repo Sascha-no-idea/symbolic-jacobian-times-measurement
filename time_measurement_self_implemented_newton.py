@@ -120,67 +120,9 @@ for i, measurement_list_element in enumerate(measurement_list):
 # define labels
 label_list = ['symbolic', 'symbolic math', 'symbolic numpy', 'manual']
         
-#[np.array(measurement).reshape((len(raw_n_list), repeats_for_avg)) for measurement in measurement_list]
-#time_symbolic_list = np.reshape(time_symbolic_list, (len(raw_n_list), repeats_for_avg))
-#time_symbolic_list_math = np.reshape(time_symbolic_list_math, (len(raw_n_list), repeats_for_avg))
-#time_symbolic_list_numpy = np.reshape(time_symbolic_list_numpy, (len(raw_n_list), repeats_for_avg))
-#time_manual_list = np.reshape(time_manual_list, (len(raw_n_list), repeats_for_avg))
-
-# calculate standard deviation and standard error
-#time_symbolic_list_mean = []
-#time_symbolic_list_std_error = []
-#time_symbolic_list_math_mean = []
-#time_symbolic_list_math_std_error = []
-#time_symbolic_list_numpy_mean = []
-#time_symbolic_list_numpy_std_error = []
-#time_manual_list_mean = []
-#time_manual_list_std_error = []
-#for i, n in enumerate(raw_n_list):
-#    time_symbolic_list_mean.append(np.mean(time_symbolic_list[i]))
-#    time_symbolic_list_std_error.append(np.std(time_symbolic_list[i])/np.sqrt(repeats_for_avg))
-#    time_symbolic_list_math_mean.append(np.mean(time_symbolic_list_math[i]))
-#    time_symbolic_list_math_std_error.append(np.std(time_symbolic_list_math[i])/np.sqrt(repeats_for_avg))
-#    time_symbolic_list_numpy_mean.append(np.mean(time_symbolic_list_numpy[i]))
-#    time_symbolic_list_numpy_std_error.append(np.std(time_symbolic_list_numpy[i])/np.sqrt(repeats_for_avg))
-#    time_manual_list_mean.append(np.mean(time_manual_list[i]))
-#    time_manual_list_std_error.append(np.std(time_manual_list[i])/np.sqrt(repeats_for_avg))
-
-
 # plot time comparison
 plt.figure()
 plt.style.use('seaborn-whitegrid')
-#plt.errorbar(
-#    raw_n_list,
-#    time_symbolic_list_mean,
-#    yerr=time_symbolic_list_std_error,
-#    fmt='.',
-#    label='symbolic jacobian',
-#    capsize=3,
-#    )
-#plt.errorbar(
-#    raw_n_list,
-#    time_symbolic_list_math_mean,
-#    yerr=time_symbolic_list_math_std_error,
-#    fmt='.',
-#    label='symbolic jacobian math',
-#    capsize=3,
-#    )
-#plt.errorbar(
-#    raw_n_list,
-#    time_symbolic_list_numpy_mean,
-#    yerr=time_symbolic_list_numpy_std_error,
-#    fmt='.',
-#    label='symbolic jacobian numpy',
-#    capsize=3,
-#    )
-#plt.errorbar(
-#    raw_n_list,
-#    time_manual_list_mean,
-#    yerr=time_manual_list_std_error,
-#    fmt='.',
-#    label='manual jacobian',
-#    capsize=3,
-#    )
 for i, label in enumerate(label_list):
     plt.errorbar(
         raw_n_list,
