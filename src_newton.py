@@ -1,19 +1,32 @@
+#from _typeshed import NoneType
+import string
 import numpy as np
-from sympy import symbols, Matrix
+from sympy import symbols, Matrix, lambdify
 
 class CalculationCase:
-    def __init__(self, equation_system, start_value, max_iterations, tolerance, name=None, manual_jacobian=None, args=[]):
+    def __init__(
+        self,
+        equation_system,
+        start_value,
+        max_iterations,
+        tolerance,
+        name=None,
+        manual_jacobian=None,
+        args=[],
+        sympy_method='sympy',
+        ):
         self.equation_system = equation_system
-        self.start_value = [float(element) for element in start_value]
+        self.start_value = np.array([float(element) for element in start_value], dtype=complex)
         self.max_iterations = int(max_iterations)
         self.tolerance = float(tolerance)
         self.name = name
         self.args = args
+        self.sympy_method = sympy_method
         if not manual_jacobian:
             self.jacobian_symbols = np.array(list(self.create_symbols()))
             self.jacobian = self.create_jacobian()
         else:
-            self.jacobian_symbols = None
+            self.jacobian_symbols = ''
             self.jacobian = manual_jacobian
 
     @property
@@ -29,19 +42,30 @@ class CalculationCase:
         sympy_matrix = Matrix(f)
         sympy_params = Matrix([self.jacobian_symbols])
         empty_jacobian = sympy_matrix.jacobian(sympy_params)
-        return empty_jacobian
+        if self.sympy_method == 'sympy':
+            return empty_jacobian
+        elif self.sympy_method == 'math':
+            empty_jacobian_lambdifed = lambdify(self.jacobian_symbols, empty_jacobian)
+            return empty_jacobian_lambdifed
+        elif self.sympy_method == 'numpy':
+            empty_jacobian_lambdifed = lambdify(self.jacobian_symbols, empty_jacobian, self.sympy_method)
+            return empty_jacobian_lambdifed
 
     def filled_jacobian(self, params):
-        if not self.jacobian_symbols:
-            return np.array(self.jacobian(params), dtype=complex)
-        assigned_params = dict(zip(self.jacobian_symbols, params))
-        filled_jacobian = self.jacobian.subs(assigned_params).evalf()
-        return np.array(filled_jacobian.tolist(), dtype=complex)
+        if type(self.jacobian_symbols) == str:  # in case of manual jacobian
+            return np.array(self.jacobian(params, *self.args), dtype=complex)
+        if self.sympy_method == 'sympy':
+            assigned_params = dict(zip(self.jacobian_symbols, params))
+            filled_jacobian = self.jacobian.subs(assigned_params).evalf()
+            return np.array(filled_jacobian.tolist(), dtype=complex)
+        else:
+            return self.jacobian(*params)
 
     def complex_to_float(self, vector):
         for element in vector:
             yield element if element.imag else element.real
 
+    @property
     def approximate(self):
         x_vector = self.start_value
         current_iteration = 0
