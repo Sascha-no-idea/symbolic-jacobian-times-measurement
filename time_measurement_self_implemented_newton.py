@@ -2,6 +2,7 @@ import numpy as np
 import time
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+from datetime import datetime
 
 from src_newton import CalculationCase
 
@@ -34,7 +35,7 @@ repeats_for_avg = 5
 max_iterations = 1000
 init_value = 4
 tolerance = 1e-8
-raw_n_list = np.arange(2, 10, 2, dtype=int)  # contains x values
+raw_n_list = np.arange(2, 20, 5, dtype=int)  # contains x values
 n_list = np.tile(raw_n_list, repeats_for_avg)  # repeats x values
 
 start_value_list = [np.ones(element, dtype=float) * init_value for element in n_list]
@@ -136,4 +137,5 @@ plt.xlabel('number of equations')
 plt.ylabel('time [s]')
 plt.legend()
 plt.yscale('log')
+plt.savefig(datetime.today().strftime('%Y-%m-%dT%H-%M-%S') + '_time_measurements.svg')
 plt.show()
