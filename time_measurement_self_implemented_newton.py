@@ -31,11 +31,11 @@ def JIntersectingSpheres(x, *data):
     return J
 
 # initialze calculation case
-repeats_for_avg = 5
+repeats_for_avg = 10
 max_iterations = 1000
 init_value = 4
 tolerance = 1e-8
-raw_n_list = np.arange(2, 20, 5, dtype=int)  # contains x values
+raw_n_list = np.arange(2, 20, 2, dtype=int)  # contains x values
 n_list = np.tile(raw_n_list, repeats_for_avg)  # repeats x values
 
 start_value_list = [np.ones(element, dtype=float) * init_value for element in n_list]
@@ -71,12 +71,12 @@ for i, n in enumerate(tqdm(n_list)):
         args=data,
         sympy_method='math'
         )
-    start_symbolic_jacobian_numpy = time.time()
+    start_symbolic_jacobian_math = time.time()
     calc_case_symbolic_jacobian_math.approximate
-    end_symbolic_jacobian_numpy = time.time()
-    time_symbolic_list_math.append(end_symbolic_jacobian_numpy - start_symbolic_jacobian_numpy)
+    end_symbolic_jacobian_math = time.time()
+    time_symbolic_list_math.append(end_symbolic_jacobian_math - start_symbolic_jacobian_math)
 
-    calc_case_symbolic_jacobian_math = CalculationCase(
+    calc_case_symbolic_jacobian_numpy = CalculationCase(
         funcIntersectingSpheres,
         start_value_list[i],
         max_iterations,
@@ -84,10 +84,10 @@ for i, n in enumerate(tqdm(n_list)):
         args=data,
         sympy_method='numpy'
         )
-    start_symbolic_jacobian_cupy = time.time()
+    start_symbolic_jacobian_numpy = time.time()
     calc_case_symbolic_jacobian_math.approximate
-    end_symbolic_jacobian_cupy = time.time()
-    time_symbolic_list_numpy.append(end_symbolic_jacobian_cupy - start_symbolic_jacobian_cupy)
+    end_symbolic_jacobian_numpy = time.time()
+    time_symbolic_list_numpy.append(end_symbolic_jacobian_numpy - start_symbolic_jacobian_numpy)
 
     calc_case_manual_jacobian = CalculationCase(
         funcIntersectingSpheres,
@@ -109,7 +109,7 @@ measurement_list = [time_symbolic_list, time_symbolic_list_math, time_symbolic_l
 mean_list = []
 std_error_list = []
 for i, measurement_list_element in enumerate(measurement_list):
-    measurement_list[i] = np.array(measurement_list_element).reshape(len(raw_n_list), repeats_for_avg)
+    measurement_list[i] = np.array(measurement_list_element).reshape((repeats_for_avg, len(raw_n_list))).transpose()
     inner_mean_list = []
     inner_std_error_list = []
     for j in range(len(raw_n_list)):
