@@ -298,9 +298,9 @@ if __name__ == '__main__':
     print('Activate headless mode? (y/n)')
     if input() == 'y':
         headless = True
-        not_headless()
         print('Activated headless mode. File selection and plots are now disabled.')
     elif input() == 'n':
+        not_headless()
         headless = False
     else:
         print('Invalid input. Exiting...')
