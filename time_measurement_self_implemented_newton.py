@@ -77,6 +77,7 @@ def calculate():
     time_manual_list = []
 
     # start measurement
+    print('Calculating...')
     for i, n in enumerate(tqdm(n_list)):
         data = (f_list[i], J_list[i], r_list[i])
 
@@ -160,9 +161,6 @@ def calculate():
     def func_cubic(x, a, b, c, d):
         return a * x ** 3 + b * x ** 2 + c * x + d
 
-    def func_quartic(x, a, b, c, d, e):
-        return a * x ** 4 + b * x ** 3 + c * x ** 2 + d * x + e
-
     # start curve fitting
     fit_list = []
     for i, element in enumerate(mean_list):
@@ -182,6 +180,7 @@ def calculate():
         fitted_list.append(inner_fitted_list)
 
     # save results
+    print('Saving results...')
     data = (raw_n_list, mean_list, std_error_list, fitted_list)
     with open('data/data.pkl', 'wb') as f:
         pickle.dump(data, f)
@@ -190,6 +189,7 @@ def calculate():
 def plot_results(save=False, load_file=False, show=True):
     # load data
     if load_file:
+        print('Waiting for user selection of file...')
         folder_path = filedialog.askopenfilename(
             title='Select file',
             filetypes=[('pickle files', '*.pkl')],
@@ -207,7 +207,7 @@ def plot_results(save=False, load_file=False, show=True):
     # define labels
     label_list = ['symbolic', 'symbolic math', 'symbolic numpy', 'manual']
     color_list = ['blue', 'green', 'red', 'black']
-    print('Plotting results...')
+    show and print('Plotting results...')
 
     # plot time comparison
     plt.figure('Time Comparison')
@@ -289,6 +289,7 @@ def plot_results(save=False, load_file=False, show=True):
     plt.yscale('log')
     save and plt.savefig('graphics/' + datetime.today().strftime('%Y-%m-%dT%H-%M-%S') + '_cubic_fit.svg')
 
+    save and print('Saving graphics to folder "graphics"')
     show and plt.show()
 
 if __name__ == '__main__':
@@ -296,7 +297,6 @@ if __name__ == '__main__':
     action = str(input('You can type "calculate", "plot", "saveplot" or "all"\n'))
     if action == 'calculate':
         print(f'You chose "{action}"')
-        print('Calculating...')
         calculate()
         print('Done!')
 
@@ -317,6 +317,7 @@ if __name__ == '__main__':
     elif action == 'saveplot':
         print(f'You chose "{action}"')
         plot_results(save=True, load_file=True, show=False)
+        print('Done!')
 
     else:
         print('Invalid input!')
