@@ -4,14 +4,13 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 from datetime import datetime
 import pickle
+import tkinter
+from tkinter import filedialog
+from scipy.optimize import curve_fit
 
 from src_newton import CalculationCase
 
-
-def not_headless():
-    import tkinter
-    from tkinter import filedialog
-    tkinter.Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
+tkinter.Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
 
 def calculate():
     # ask user for parameters
@@ -151,8 +150,6 @@ def calculate():
         std_error_list.append(inner_std_error_list)
 
     # use scipy to fit curve to data
-    from scipy.optimize import curve_fit
-
     # define functions for fitting
     def func_exponential(x, a, b):
         return a * np.exp(b * x)
@@ -295,17 +292,6 @@ def plot_results(save=False, load_file=False, show=True):
     show and plt.show()
 
 if __name__ == '__main__':
-    print('Activate headless mode? (y/n)')
-    if input() == 'y':
-        headless = True
-        print('Activated headless mode. File selection and plots are now disabled.')
-    elif input() == 'n':
-        not_headless()
-        headless = False
-    else:
-        print('Invalid input. Exiting...')
-        exit()
-
     print('What do you want to do?')
     action = str(input('You can type "calculate", "plot", "saveplot" or "all"\n'))
     if action == 'calculate':
@@ -314,9 +300,6 @@ if __name__ == '__main__':
         print('Done!')
 
     elif action == 'plot':
-        if headless:
-            print('Headless mode is activated. Plots are disabled. Exiting...')
-            exit()
         print(f'You chose "{action}"')
         plot_results(load_file=True)
         print('Done!')
@@ -327,16 +310,10 @@ if __name__ == '__main__':
         print(f'You chose "{action}"')
         print('Calculating...')
         calculate()
-        if headless:
-            plot_results(save=True, show=False)
-        else:
-            plot_results(save=True)
+        plot_results(save=True)
         print('Done!')
 
     elif action == 'saveplot':
-        if headless:
-            print("Headless mode is activated. Can't open GUI to select file. Exiting...")
-            exit()
         print(f'You chose "{action}"')
         plot_results(save=True, load_file=True, show=False)
         print('Done!')
