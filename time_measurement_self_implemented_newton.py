@@ -4,13 +4,9 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 from datetime import datetime
 import pickle
-import tkinter
-from tkinter import filedialog
 from scipy.optimize import curve_fit
 
 from src_newton import CalculationCase
-
-tkinter.Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
 
 def calculate():
     # ask user for parameters
@@ -188,6 +184,11 @@ def calculate():
 def plot_results(save=False, load_file=False, show=True):
     # load data
     if load_file:
+        import tkinter
+        from tkinter import filedialog
+
+        tkinter.Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
+
         print('Waiting for user selection of file...')
         folder_path = filedialog.askopenfilename(
             title='Select file',
