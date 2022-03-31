@@ -67,16 +67,22 @@ def calculate():
     J_list = [np.zeros((element, element), dtype=float).tolist() for element in n_list]
     r_list = [np.ones(element, dtype=float).tolist() for element in n_list]
 
+    f_array = [np.zeros(element, dtype=float) for element in n_list]
+    J_array = [np.zeros((element, element), dtype=float) for element in n_list]
+    r_array = [np.ones(element, dtype=float) for element in n_list]
+
     # prepare for measurement
     time_symbolic_list = []
     time_symbolic_list_math = []
     time_symbolic_list_numpy = []
     time_manual_list = []
+    time_manual_list_array = []
 
     # start measurement
     print('Calculating...')
     for i, n in enumerate(tqdm(n_list)):
         data = (f_list[i], J_list[i], r_list[i])
+        array_data = (f_array[i], J_array[i], r_array[i])
 
         calc_case_symbolic_jacobian = CalculationCase(
             funcIntersectingSpheres,
@@ -129,8 +135,57 @@ def calculate():
         end_manual_jacobian = time.time()
         time_manual_list.append(end_manual_jacobian - start_manual_jacobian)
 
+        calc_case_manual_jacobian_array = CalculationCase(
+            funcIntersectingSpheres,
+            start_value_list[i],
+            max_iterations,
+            tolerance,
+            manual_jacobian=JIntersectingSpheres,
+            args=array_data
+            )
+        start_manual_jacobian_array = time.time()
+        calc_case_manual_jacobian_array.approximate
+        end_manual_jacobian_array = time.time()
+        time_manual_list_array.append(end_manual_jacobian_array - start_manual_jacobian_array)
+
     # combine results
-    measurement_list = [time_symbolic_list, time_symbolic_list_math, time_symbolic_list_numpy, time_manual_list]
+    measurement_list = [
+        time_symbolic_list,
+        time_symbolic_list_math,
+        time_symbolic_list_numpy,
+        time_manual_list,
+        time_manual_list_array
+        ]
+
+    # save results
+    print('Saving results...')
+    data = (measurement_list, n_list, raw_n_list, repeats_for_avg)
+    with open('data/data.pkl', 'wb') as f:
+        pickle.dump(data, f)
+
+
+def plot_results(save=False, load_file=False, show=True):
+    # load data
+    if load_file:
+        import tkinter
+        from tkinter import filedialog
+
+        tkinter.Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
+
+        print('Waiting for user selection of file...')
+        folder_path = filedialog.askopenfilename(
+            title='Select file',
+            filetypes=[('pickle files', '*.pkl')],
+            initialdir='./data',
+            initialfile='data.pkl'
+            )
+        with open(folder_path, 'rb') as f:
+            data = pickle.load(f)
+    else:
+        with open('data/data.pkl', 'rb') as f:
+            data = pickle.load(f)
+    
+    measurement_list, n_list, raw_n_list, repeats_for_avg = data
 
     # reshape lists to 2D array and calculate average values and standard errors
     mean_list = []
@@ -174,39 +229,9 @@ def calculate():
         inner_fitted_list.append(func_cubic(raw_n_list, *fit_list[i][2]))
         fitted_list.append(inner_fitted_list)
 
-    # save results
-    print('Saving results...')
-    data = (raw_n_list, mean_list, std_error_list, fitted_list)
-    with open('data/data.pkl', 'wb') as f:
-        pickle.dump(data, f)
-
-
-def plot_results(save=False, load_file=False, show=True):
-    # load data
-    if load_file:
-        import tkinter
-        from tkinter import filedialog
-
-        tkinter.Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
-
-        print('Waiting for user selection of file...')
-        folder_path = filedialog.askopenfilename(
-            title='Select file',
-            filetypes=[('pickle files', '*.pkl')],
-            initialdir='./data',
-            initialfile='data.pkl'
-            )
-        with open(folder_path, 'rb') as f:
-            data = pickle.load(f)
-    else:
-        with open('data/data.pkl', 'rb') as f:
-            data = pickle.load(f)
-    
-    raw_n_list, mean_list, std_error_list, fitted_list = data
-
     # define labels
-    label_list = ['symbolic', 'symbolic math', 'symbolic numpy', 'manual']
-    color_list = ['blue', 'green', 'red', 'black']
+    label_list = ['symbolic', 'symbolic math', 'symbolic numpy', 'manual', 'manual array']
+    color_list = ['blue', 'green', 'red', 'black', 'orange']
     show and print('Plotting results...')
 
     # plot time comparison

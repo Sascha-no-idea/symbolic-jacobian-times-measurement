@@ -16,7 +16,7 @@ class CalculationCase:
         sympy_method='sympy',
         ):
         self.equation_system = equation_system
-        self.start_value = np.array([float(element) for element in start_value], dtype=complex)
+        self.start_value = np.array([float(element) for element in start_value], dtype=np.float64)
         self.max_iterations = int(max_iterations)
         self.tolerance = float(tolerance)
         self.name = name
@@ -53,17 +53,13 @@ class CalculationCase:
 
     def filled_jacobian(self, params):
         if type(self.jacobian_symbols) == str:  # in case of manual jacobian
-            return np.array(self.jacobian(params, *self.args), dtype=complex)
+            return np.array(self.jacobian(params, *self.args), dtype=np.float64)
         if self.sympy_method == 'sympy':
             assigned_params = dict(zip(self.jacobian_symbols, params))
             filled_jacobian = self.jacobian.subs(assigned_params).evalf()
-            return np.array(filled_jacobian.tolist(), dtype=complex)
+            return np.array(filled_jacobian.tolist(), dtype=np.float64)
         else:
             return self.jacobian(*params)
-
-    def complex_to_float(self, vector):
-        for element in vector:
-            yield element if element.imag else element.real
 
     @property
     def approximate(self):
@@ -72,7 +68,7 @@ class CalculationCase:
         delta_vector = np.inf
         while current_iteration <= self.max_iterations and np.linalg.norm(delta_vector) > self.tolerance:
             y_vector = self.equation_system(x_vector, *self.args)
-            y_vector = np.array(y_vector, dtype=complex)
+            y_vector = np.array(y_vector, dtype=np.float64)
             assert len(x_vector) == len(y_vector)
 
             filled_jacobi_matrix = self.filled_jacobian(x_vector)
@@ -90,8 +86,7 @@ class CalculationCase:
     
             current_iteration += 1
 
-        # beautify non-complex results
-        x_vector = list(self.complex_to_float(x_vector))
+        # beautify results
         if current_iteration <= self.max_iterations:
             # approximation successful
             return x_vector, current_iteration + 1
