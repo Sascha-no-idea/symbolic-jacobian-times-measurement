@@ -28,7 +28,8 @@ Im Rahmen der Vorüberlegungen wurden derartige gezielte Zeitmessungen einzelner
 
 ### Grundlagen
 
-Zum Einsatz kommt das eigens implementierte Newton-Verfahren, dass bereits im Rahmen der Projektarbeit "Newton-Verfahren" vom 19. Mai 2021  erstellt wurde. Der grundlegende Aufbau des Programms ist in der nachfolgenden Abbildung in der Form eines UML-Aktivitätsdiagramms dargestellt, die ebenfalls in der genannten Projektarbeit zu finden ist. Der vollständige Quellcode dieses Verfahren ist im Anhang als `src_newton.py` einzusehen.<img src="C:\Users\sasch\OneDrive\_Documents\_Dokumente\_Studium\21_SoSe\Numerische Verfahren\Projekt 2\activity diagram.svg" alt="activity diagram" style="zoom:75%;" />
+Zum Einsatz kommt das eigens implementierte Newton-Verfahren, dass bereits im Rahmen der Projektarbeit "Newton-Verfahren" vom 19. Mai 2021  erstellt wurde. Der grundlegende Aufbau des Programms ist in der nachfolgenden Abbildung in der Form eines UML-Aktivitätsdiagramms dargestellt, die ebenfalls in der genannten Projektarbeit zu finden ist. Der vollständige Quellcode dieses Verfahren ist im Anhang als `src_newton.py` einzusehen.
+<img src="./graphics/activity_diagram.svg" alt="activity diagram" style="zoom:75%;" />
 
 ### Verwendung symbolischer Berechnungen
 
