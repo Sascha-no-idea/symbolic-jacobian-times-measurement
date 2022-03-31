@@ -252,7 +252,7 @@ def plot_results(save=False, load_file=False, show=True):
     plt.ylabel('time [s]')
     plt.legend()
     plt.yscale('log')
-    save and plt.savefig('graphics/' + datetime.today().strftime('%Y-%m-%dT%H-%M-%S') + '_time_comparison.svg')
+    save and plt.savefig('docs/graphics/' + datetime.today().strftime('%Y-%m-%dT%H-%M-%S') + '_time_comparison.svg')
 
     plt.figure('Exponential fit')
     plt.style.use('seaborn-whitegrid')
@@ -272,7 +272,7 @@ def plot_results(save=False, load_file=False, show=True):
     plt.ylabel('time [s]')
     plt.legend()
     plt.yscale('log')
-    save and plt.savefig('graphics/' + datetime.today().strftime('%Y-%m-%dT%H-%M-%S') + '_exponential_fit.svg')
+    save and plt.savefig('docs/graphics/' + datetime.today().strftime('%Y-%m-%dT%H-%M-%S') + '_exponential_fit.svg')
 
     plt.figure('Quadratic fit')
     plt.style.use('seaborn-whitegrid')
